@@ -3,10 +3,11 @@
 #include <string.h>
 #include "header.h"
 
+int contador = -1;
+struct material p[50];
+
 void main(){
     printf("\nGerenciador de estoque de materiais de obra... v1.0\n\n");
-    int contador = -1;
-    struct material produto[50];
     printf("Deseja iniciar o programa com estoque inicial para testes? (s ou n)\n");
     char option;
     option = getchar();
@@ -15,15 +16,15 @@ void main(){
         char matriz[6][20] = {"Piso\n","Argamassa\n","Tinta preta\n","Tinta amarela\n","Saco de cimento\n","Tabuas de madeira\n"};
         for(int i = 0;i<6;i++){
             contador++;
-            strcpy(produto[i].material,matriz[i]);
-            produto[i].quantidade = (i+1)*10;
-            produto[i].price = (i+1)*5;
+            strcpy(p[i].material,matriz[i]);
+            p[i].quantidade = (i+1)*10;
+            p[i].price = (i+1)*5;
         }
     }
-    menu(contador,produto);
+    menu();
 }
 
-int menu(int contador,struct material *p){
+int menu(){
     system("cls");
     char option;
     printf("\n|----- Gerenciador De Estoque -----|\n");
@@ -36,37 +37,37 @@ int menu(int contador,struct material *p){
     option = getchar();
     switch (option){
         case '1': 
-            mostrarEstoque(contador,p); 
+            mostrarEstoque(); 
         case '2': 
-            pesquisarEstoque(contador,p); 
+            pesquisarEstoque(); 
         case '3': 
-            adicionarEstoque(contador,p); 
+            adicionarEstoque(); 
         case '4': 
-            removerEstoque(contador,p); 
+            removerEstoque(); 
         case '5': 
-            alterarEstoque(contador,p);
+            alterarEstoque();
         case '0':
             exit(0);
         default: 
-            menu(contador,p);
+            menu();
     }
 }
 
-void mostrarEstoque(int contador,struct material *p){
+void mostrarEstoque(){
     system("cls");
     if(contador < 0){
         printf("\nEstoque vazio\n\n");
         system("pause");
-        menu(contador,p);
+        menu();
     }
     for(int i=0;i<=contador;i++){
-        mostrarProduto(i,p);
+        mostrarProduto(i);
     }
     system("pause");
-    menu(contador,p);
+    menu();
 }
 
-void pesquisarEstoque(int contador,struct material *p){
+void pesquisarEstoque(){
     system("cls");
     printf("Digite o nome do produto:");
     char pesquisa[30];
@@ -83,7 +84,7 @@ void pesquisarEstoque(int contador,struct material *p){
             }
         }
         if(teste==1){
-            mostrarProduto(i,p);
+            mostrarProduto(i);
             quantidade++;
         }
     }
@@ -96,13 +97,13 @@ void pesquisarEstoque(int contador,struct material *p){
     printf("Deseja fazer mais uma pesquisa? (s ou n)\n");
     option = getchar();
     if(option == 's' || option == 'S'){
-        return pesquisarEstoque(contador,p); 
+        return pesquisarEstoque(); 
     }else{
-        menu(contador,p);
+        menu();
     }
 }
 
-void adicionarEstoque(int contador,struct material *p){
+void adicionarEstoque(){
     system("cls");
     contador++;
     printf("Digite o nome do material:");
@@ -115,13 +116,13 @@ void adicionarEstoque(int contador,struct material *p){
     scanf("%f%*c",&p[contador].price);
     printf("\nMaterial adicionado com sucesso no estoque\n\n");
     system("pause");
-    menu(contador,p);
+    menu();
 }
 
-void removerEstoque(int contador,struct material *p){
+void removerEstoque(){
     system("cls");
     if(contador==-1){
-        mostrarEstoque(contador,p);
+        mostrarEstoque();
     }
     int id;
     printf("Digite o id do produto a ser retirado do estoque:");
@@ -129,9 +130,9 @@ void removerEstoque(int contador,struct material *p){
     if(!(id>=0 && id<=contador)){
         printf("\nProduto nao encontrado\n\n");
         system("pause");
-        menu(contador,p);
+        menu();
     }
-    mostrarProduto(id,p);
+    mostrarProduto(id);
     printf("Tem certeza que deseja excluir este item do estoque? (s ou n)\n");
     char option;
     option = getchar();
@@ -146,10 +147,10 @@ void removerEstoque(int contador,struct material *p){
         printf("\nComando cancelado, voltando a tela inicial\n\n");
     }
     system("pause");
-    menu(contador,p);
+    menu();
 }
 
-void alterarEstoque(int contador,struct material *p){
+void alterarEstoque(){
     system("cls");
     int id;
     printf("Digite o id do produto a ser alterado:");
@@ -157,9 +158,9 @@ void alterarEstoque(int contador,struct material *p){
     if(!(id>=0 && id<=contador)){
         printf("\nProduto nao encontrado\n\n");
         system("pause");
-        menu(contador,p);
+        menu();
     }else{
-        mostrarProduto(id,p);
+        mostrarProduto(id);
     }
     printf("Deseja mesmo alterar o produto? (s ou n)");
     char option = getchar();
@@ -188,14 +189,14 @@ void alterarEstoque(int contador,struct material *p){
             scanf("%f",&p[id].price);
         }
         printf("\nProduto alterado com sucesso\n");
-        mostrarProduto(id,p);
+        mostrarProduto(id);
         system("pause");
-        menu(contador,p);
+        menu();
     }else{
-        menu(contador,p);
+        menu();
     }
     system("pause");
-    menu(contador,p);
+    menu();
 }
 
 void toCase(char *p){
@@ -208,7 +209,7 @@ void toCase(char *p){
     }
 }
 
-void mostrarProduto(int id,struct material *p){
+void mostrarProduto(int id){
     printf("\nID do pacote: %d\n",id);
     printf("Nome do material......... : %s",p[id].material);
     printf("Quantidade em estoque.... : %d\n",p[id].quantidade);
